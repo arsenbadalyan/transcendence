@@ -1,0 +1,16 @@
+.DS_Store
+
+# Python
+venv/
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3
+*.log
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
