@@ -1,25 +1,55 @@
+
 class I18nController {
 
 	constructor() {}
 
 	get(key, vars) {
-		if (!I18nController.translations.hasOwnProperty(key)
+		if (!this.translations.hasOwnProperty(key)
 			|| (vars && typeof vars !== "object")
 		) {
 			return (`??? ${key} ???`);
 		}
 
-		return (I18nController.translations[key].format(vars))
+		return (this.translations[key].format(vars))
 	}
 
-	static translations = {
+	translationKeys = {
+		validation: {
+			minValueUnderflow: "error.validation.min.underflow",
+			maxValueOverflow: "error.validation.max.overflow",
+			minLengthUnderflow: "error.validation.min.length.underflow",
+			maxLengthOverflow: "error.validation.max.length.overflow",
+			required: "error.validation.required",
+			invalidEmail: "error.validation.invalid.email"
+		}
+	}
+
+	translations = {
 		// validation errors
-		"error.validation.min.underflow": "",
-		"error.validation.max.overflow": "",
-		"error.validation.min.length.underflow": "",
-		"error.validation.max.length.overflow": "",
-		"error.validation.required": "",
-		"error.validation.max.overflow": "",
+		[this.translationKeys.validation.minValueUnderflow]: {
+			en: "",
+			ru: ""
+		},
+		[this.translationKeys.validation.maxValueOverflow]: {
+			en: "",
+			ru: ""
+		},
+		[this.translationKeys.validation.minLengthUnderflow]: {
+			en: "",
+			ru: ""
+		},
+		[this.translationKeys.validation.maxLengthOverflow]: {
+			en: "",
+			ru: ""
+		},
+		[this.translationKeys.validation.required]: {
+			en: "",
+			ru: ""
+		},
+		[this.translationKeys.validation.invalidEmail]: {
+			en: "",
+			ru: ""
+		},
 	};
 
 };

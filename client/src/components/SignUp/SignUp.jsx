@@ -3,67 +3,50 @@ import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Button from "react-bootstrap/Button";
 
 import { cn } from "../../utils/generalUtils";
+import { SignUpSchema } from "../../constants/validatorSchemas";
+import useValidator from "../hooks/useValidator";
 
 const SignUp = () => {
 
+	const {
+		validatedAlready,
+		validatorFormRef,
+		getRuleErrors,
+	} = useValidator(SignUpSchema);
+
 	return (
 		<div className={cn("whole-size")}>
-			<Form id="test" className="d-flex flex-column gap-2">
-				<FloatingLabel
-					label="first name"
-				>
-					<Form.Control
-						required
-						type="text"
-						placeholder="first name"
-					/>
-				</FloatingLabel>
-				<FloatingLabel
-					label="last name"
-				>
-					<Form.Control
-						required
-						type="text"
-						placeholder="last name"
-					/>
-				</FloatingLabel>
-				<FloatingLabel
-					label="username"
-				>
-					<Form.Control
-						required
-						type="text"
-						placeholder="username"
-					/>
-				</FloatingLabel>
-				<FloatingLabel
-					label="email"
-				>
-					<Form.Control
-						required
-						type="emil"
-						placeholder="email"
-					/>
-				</FloatingLabel>
-				<FloatingLabel
-					label="password"
-				>
-					<Form.Control
-						required
-						type="password"
-						placeholder="password"
-					/>
-				</FloatingLabel>
-				<FloatingLabel
-					label="repeat password"
-				>
-					<Form.Control
-						required
-						type="password"
-						placeholder="repeat password"
-					/>
-				</FloatingLabel>
-				<Button type="submit" variant="dark">Sign Up</Button>
+			<Form
+				ref={validatorFormRef}
+				className="d-flex flex-column gap-2"
+				noValidate
+			>
+				{SignUpSchema.getRules().map(rule => {
+
+					const ruleErrors = getRuleErrors(rule.getName());
+					const successMsg = rule.getSuccessMsg();
+
+					return (
+						<FloatingLabel
+							key={rule.getName()}
+							label={rule.getName()}
+						>
+							<Form.Control
+								name={rule.getName()}
+								type={rule.getType()}
+								placeholder={rule.getName()}
+								isValid={!ruleErrors.length && validatedAlready}
+								isInvalid={ruleErrors.length}
+							/>
+							{ successMsg ? <Form.Control.Feedback>{ successMsg }</Form.Control.Feedback> : null }
+							{ ruleErrors.map((error, idx) => (
+								<Form.Control.Feedback key={idx} type="invalid">{ error }</Form.Control.Feedback>
+							)) }
+						</FloatingLabel>
+					);
+
+				})}
+				<Button type="submit" variant="dark">Sign In</Button>
 			</Form>
 		</div>
 	);

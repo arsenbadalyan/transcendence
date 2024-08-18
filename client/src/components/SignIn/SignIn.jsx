@@ -13,20 +13,8 @@ const SignIn = () => {
 	const {
 		validatedAlready,
 		validatorFormRef,
-		formValidator,
+		getRuleErrors,
 	} = useValidator(SignInSchema);
-	// const [validatedAlready, setValidatedAlready] = useState(false);
-
-	// const signIn = evt => {
-	// 	const form = evt.currentTarget;
-	// 	evt.preventDefault();
-	// 	evt.stopPropagation();
-
-	// 	const validity = evt.currentTarget.checkValidity();
-	// 	setValidatedAlready(true);
-	// 	// console.log(Array.from(form.querySelectorAll(':invalid')));
-	// 	console.log(validity);
-	// };
 
 	return (
 		<div className={cn("whole-size")}>
@@ -34,36 +22,32 @@ const SignIn = () => {
 				ref={validatorFormRef}
 				className="d-flex flex-column gap-2"
 				noValidate
-				validated={validatedAlready}
-				onSubmit={formValidator}
 			>
-				{SignInSchema.getRules().map(rule => !console.log(rule) && (
-					<FloatingLabel
-						key={rule.getName()}
-						label={rule.getName()}
-					>
-						<Form.Control
-							required={rule.getRequired()}
-							type={rule.getType()}
-							placeholder={rule.getName()}
-							min={rule.getMin()}
-							max={rule.getMax()}
-							isInvalid={false}
-						/>
-						<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-						<Form.Control.Feedback type="invalid">Looks good!</Form.Control.Feedback>
-					</FloatingLabel>
-				))}
-				{/* <FloatingLabel
-					label="password"
-				>
-					<Form.Control
-						required
-						minLength={7}
-						type="password"
-						placeholder="password"
-					/>
-				</FloatingLabel> */}
+				{SignInSchema.getRules().map(rule => {
+
+					const ruleErrors = getRuleErrors(rule.getName());
+					const successMsg = rule.getSuccessMsg();
+
+					return (
+						<FloatingLabel
+							key={rule.getName()}
+							label={rule.getName()}
+						>
+							<Form.Control
+								name={rule.getName()}
+								type={rule.getType()}
+								placeholder={rule.getName()}
+								isValid={!ruleErrors.length && validatedAlready}
+								isInvalid={ruleErrors.length}
+							/>
+							{ successMsg ? <Form.Control.Feedback>{ successMsg }</Form.Control.Feedback> : null }
+							{ ruleErrors.map((error, idx) => (
+								<Form.Control.Feedback key={idx} type="invalid">{ error }</Form.Control.Feedback>
+							)) }
+						</FloatingLabel>
+					);
+
+				})}
 				<Button type="submit" variant="dark">Sign In</Button>
 			</Form>
 		</div>

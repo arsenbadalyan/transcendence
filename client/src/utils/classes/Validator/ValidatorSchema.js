@@ -1,3 +1,5 @@
+
+import i18n from "../../../controllers/I18nController";
 import ObjectValidator from "./ObjectValidator";
 
 class ValidatorSchema {
@@ -17,7 +19,7 @@ class ValidatorSchema {
 	}
 
 	type(type) {
-		if (ValidatorSchema.VALID_TYPES.hasOwnProperty(type))
+		if (ValidatorSchema.TYPES.hasOwnProperty(type))
 			this.rules[ValidatorSchema.RULES.type] = type;
 		return (this);
 	}
@@ -89,11 +91,55 @@ class ValidatorSchema {
 		return (this.rules[ValidatorSchema.RULES.oneOf]);
 	}
 
+	successMsg(msg) {
+		this.rules[ValidatorSchema.RULES.successMsg] = msg;
+		return (this);
+	}
+
+	getSuccessMsg() {
+		return (this.rules[ValidatorSchema.RULES.successMsg]);
+	}
+
 	validate(value) {
 
 		const errorList = [];
 
-		// if (this.getMax() )
+		if (this.getRequired() && (typeof value !== "number" && !value)) {
+			errorList.push(i18n.translationKeys.validation.required);
+		} else {
+			// rules that needs to check if its not required or passed required rule
+			if (this.getType() === ValidatorSchema.TYPES.email) {
+				const emailRegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+				if (!emailRegExp.test(value)) {
+					errorList.push(i18n.translationKeys.validation.invalidEmail);
+				}
+			}
+
+			if (this.getType() === ValidatorSchema.TYPES.number) {
+				value = +value;
+	
+				if (this.getMin() > value) {
+					errorList.push(i18n.translationKeys.validation.minValueUnderflow);
+				}
+	
+				if (this.getMax() < value) {
+					errorList.push(i18n.translationKeys.validation.maxValueOverflow);
+				}
+			} else {
+	
+				// assuming that value is text if not number
+				value += "";
+	
+				if (this.getMinLen() > value.length) {
+					errorList.push(i18n.translationKeys.validation.minLengthUnderflow);
+				}
+	
+				if (this.getMaxLen() < value.length) {
+					errorList.push(i18n.translationKeys.validation.maxLengthOverflow);
+				}
+	
+			}
+		}
 
 		return (errorList)
 
@@ -119,7 +165,7 @@ class ValidatorSchema {
 		text: "text",
 		number: "number",
 		email: "email",
-		password: "password"
+		password: "password",
 	}
 
 	static RULES = {
@@ -129,7 +175,8 @@ class ValidatorSchema {
 		min: "min",
 		required: "required",
 		minLen: "minLen",
-		oneOf: "oneOf"
+		oneOf: "oneOf",
+		successMsg: "successMsg"
 	}
 
 };
