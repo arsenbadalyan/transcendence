@@ -14,8 +14,8 @@ class Analytics(models.Model):
 
 class Users(models.Model):
     GENDER_CHOICES = [
-        (1, 'Male'),
-        (2, 'Female')
+        ('male', 'Male'),
+        ('female', 'Female')
     ]
 
     UserID = models.AutoField(primary_key=True)
