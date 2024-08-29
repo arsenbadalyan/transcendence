@@ -1,0 +1,73 @@
+### REGISTRATION
+POST http://127.0.0.1:8000/api/users/registration HTTP/1.1
+Host: localhost
+Content-Type: application/json
+
+{
+	"name": "NAME",
+	"surname": "SURNAME",
+	"username": "USERNAME",
+	"email": "EMAIL",
+	"password": "PASSWORD",
+	"confirmPasswrod": "CONFIRMPASSWORD",
+	"gender": "GENDER"
+}
+
+### LOGIN
+POST http://127.0.0.1:8000/api/users/login HTTP/1.1
+Host: localhost
+Content-Type: application/json
+
+{
+	"username": "USERNAME",
+	"password": "PASSWORD"
+}
+
+### REFRESH TOKENS
+GET http://localhost:8000/api/users/refresh HTTP/1.1
+Host: localhost
+Content-Type: application/json
+
+
+### LOGOUT REQUEST
+POST http://localhost:8000/api/users/logout HTTP/1.1
+Host: localhost
+Content-Type: application/json
+
+
+### NOTE: Vstah chem nerqevinneri vrov
+
+### GET MESSAGES
+GET http://localhost:8000/api/messages HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Authorization: Bearer ACCESSTOKEN
+
+# NOTE: Chat-GPT-na asel hly tes inch egi limita asum
+# Recommendation: This endpoint is fine for retrieving a list of messages. Ensure you support pagination and filtering for scalability.
+# Example: GET http://localhost:8000/api/v1/messages?page=1&limit=20
+
+### GET ONE MESSAGE
+GET http://localhost:8000/api/messages/:messageid HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Authorization: Bearer ACCESSTOKEN
+
+
+### GET ANALYTICS
+GET http://localhost:8000/api/users/:userid/analytics HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Authorization: Bearer ACCESSTOKEN
+
+### GET MATCHES
+GET http://localhost:8000/api/match/:matchid HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Authorization: Bearer ACCESSTOKEN
+
+### GET TOURNAMENT
+GET http://localhost:8000/api/tournaments/:tournamentid HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Authorization: Bearer ACCESSTOKEN
