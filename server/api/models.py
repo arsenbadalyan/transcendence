@@ -25,7 +25,7 @@ class Users(models.Model):
     Email = models.EmailField(unique=True)
     Password = models.CharField(max_length=255)
     LastLogin = models.DateTimeField(auto_now=True)
-    Gender = models.IntegerField(choices=GENDER_CHOICES)
+    Gender = models.CharField(choices=GENDER_CHOICES)
     Analytics = models.OneToOneField(Analytics, on_delete=models.CASCADE, null=True, blank=True)
 
     def save(self, *args, **kwargs) -> None:
