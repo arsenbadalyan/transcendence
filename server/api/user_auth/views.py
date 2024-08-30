@@ -1,14 +1,14 @@
 import json
 from typing import Dict, Any
-from typing import Dict, Any
 from django.views import View
-from django.conf import settings
 from api.models import Users
+from django.conf import settings
 from django.http import HttpRequest, JsonResponse
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from api.user_auth.services.user_service import UserService
+from api.user_auth.helper.helper import set_refresh_token_cookie
 
 # Create your views here.
 @method_decorator(csrf_exempt, name='dispatch')
@@ -22,17 +22,7 @@ class RegistrationView(View):
         try:
             result = UserService.register_user(data)
             response = JsonResponse(result, status=201)
-            refresh_token = result.get('tokens', {}).get('refresh_token')
-            max_age = int(settings.REFRESH_TOKEN_EXP.total_seconds())
-            response.set_cookie(
-                'refreshToken',
-                refresh_token,
-                max_age=max_age,
-                httponly=True,
-                secure=settings.SECURE_COOKIE, # Ensure this is set to True in production
-                samesite='Lax'
-            )
-            return response
+            return set_refresh_token_cookie(response, result)
         except ValidationError as e:
             return JsonResponse({'errors': e.message_dict}, status=400)
 
@@ -47,17 +37,7 @@ class LoginView(View):
         try:
             result = UserService.login_user(data)
             response = JsonResponse(result, status=201)
-            refresh_token = result.get('tokens', {}).get('refresh_token')
-            max_age = int(settings.REFRESH_TOKEN_EXP.total_seconds())
-            response.set_cookie(
-                'refreshToken',
-                refresh_token,
-                max_age=max_age,
-                httponly=True,
-                secure=settings.SECURE_COOKIE, # Ensure this is set to True in production
-                samesite='Lax'
-            )
-            return response
+            return set_refresh_token_cookie(response, result)
         except Users.DoesNotExist:
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
         except ValidationError as e:
