@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 from decouple import config
 
@@ -129,3 +130,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Time Zone
+USE_TZ = True
+TIME_ZONE = 'Asia/Yerevan'
+
+# JsonWebToken
+ACCESS_TOKEN_SECRET = config('JWT_ACCESS_SECRET')
+REFRESH_TOKEN_SECRET = config('JWT_REFRESH_SECRET')
+JWT_ALGORITHM = 'HS256'
+ACCESS_TOKEN_EXP = timedelta(hours=1)
+REFRESH_TOKEN_EXP = timedelta(days=7)
+JWT_ISSUER = config('JWT_ISSUER')
+JWT_AUDIENCE = config('JWT_AUDIENCE')
+
+# Cookies
+SECURE_COOKIE = False # Change in production to True
