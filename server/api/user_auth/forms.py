@@ -28,3 +28,7 @@ class RegistrationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'autofocus': True}))
+    password = forms.CharField(widget=forms.PasswordInput)
