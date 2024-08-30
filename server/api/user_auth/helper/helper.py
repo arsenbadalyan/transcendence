@@ -7,7 +7,7 @@ def set_refresh_token_cookie(response: JsonResponse, result: Dict[str, Any]) -> 
     if refresh_token:
         max_age = int(settings.REFRESH_TOKEN_EXP.total_seconds())
         response.set_cookie(
-            'refreshToken',
+            'refresh_token',
             refresh_token,
             max_age=max_age,
             httponly=True,
