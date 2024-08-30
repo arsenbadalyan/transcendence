@@ -48,3 +48,11 @@ class UserService:
                 raise Users.DoesNotExist
         else:
             raise ValidationError(form.errors)
+
+    @staticmethod
+    def logout_user(refresh_token: str) -> None:
+        try:
+            token_instance = Tokens.objects.get(refresh_token=refresh_token)
+            token_instance.delete()
+        except Tokens.DoesNotExist:
+            pass

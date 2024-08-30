@@ -42,3 +42,16 @@ class LoginView(View):
             return JsonResponse({'error': 'Invalid credentials'}, status=401)
         except ValidationError as e:
             return JsonResponse({'errors': e.message_dict}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class LogoutView(View):
+    def post(self, request: HttpRequest, *args: Any, **kwargs: Any) -> JsonResponse:
+        try:
+            refresh_token = request.COOKIES.get('refresh_token')
+            if refresh_token:
+                UserService.logout_user(refresh_token)
+            response = JsonResponse({'message': 'Successfully logged out.'}, status=200)
+            response.delete_cookie('refresh_token')
+            return response
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
